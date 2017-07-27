@@ -1,0 +1,141 @@
+<script>
+// ****************** FUNZIONE CHE RENDERIZZA LA TABELLA FILTRATA CON IL PLUG_IN DATATABLES ****************************
+    function renderTable(){
+
+       $('#myTb').empty();
+
+        google.script.run
+        .withSuccessHandler(onReadData)
+        .readData()
+      }
+           
+      window.onReadData = function(dataObject){
+      
+      // estrae le proprietà dell'oggetto
+       var keys = [];
+           for(var key in dataObject.table[0]){
+              keys.push(key);
+           }
+       
+       console.log(keys)
+       
+      // dataObject.table[0]['Planimetrie'] = [1, 2];  
+      dataObject.table[0]['Planimetrie'] = [{titolo: 'pippo', link: 'http://www.google.com'}, {titolo: 'pippo', link: 'http://www.google.com'}, {titolo: 'pluto', link: 'http://www.aci.it'}, {titolo: 'paperino', link: 'http://www.google.com'}];  
+      
+      //console.log(JSON.stringify(dataObject))
+       
+       
+
+       
+        $(document).ready(function (){
+        
+        // ******* definisce la variabile "myTb" ***********************
+
+        var myTb = $('#myTb').DataTable({
+        
+        dom: 'Bfrltip',
+        
+        buttons: [
+        
+               { text: 'Inserisci', action: function (e, dt, node, conf) { window.open('https://docs.google.com/a/aci.it/forms/d/1FAIpQLSfriiEbU_mRbucmkeBHw1juev-MepzVZpK1Gm-DLDTetXk37w/viewform', '_blank' );} },
+                'copyHtml5',                                                            
+                'excelHtml5',
+               { extend: 'csvHtml5', text: 'XLS', orientation: 'landscape', alignment: 'center', exportOptions: { columns: [ 0, 1, 2, 3, 4] } },
+               { extend: 'pdfHtml5', text: 'PDF', orientation: 'landscape', alignment: 'center', exportOptions: { columns: [ 0, 1, 2, 3, 4] }, 
+                   styles: { layout: 'lightHorizontalLines', tableHeader:{ fillColor:"#F0F8FF" }, }, },
+                ],
+              
+        columns: [
+        
+          { data: 'Modulo', title: "Modulo"},
+          { data: 'Dettagli', title: "Dettagli"},
+          { data: 'Funzionario', title: "Funzionario"},
+          { data: 'Ufficio Territoriale', title: "Ufficio"},
+          { data: 'Data rilevazione', title: "Data Rilevazione"},
+          { data: 'email proprietario', title: "Email", visible: false},
+          { data: 'indexEditor', title: "Editor", visible: false },
+          { data: 'Media giornaliera STA PRA', title: "Media giornaliera STA PRA"},
+          { data: "Totale personale assegnato", title: "Personale assegnato"},
+          { data: "Personale in produzione", title: "Personale in produzione", visible:false},
+          { data: null, title: "Personale", className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
+          //{ data: null, title: "Planimetria", className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
+                
+          ],
+          
+        columnDefs: [
+
+        { targets: '_all', visible: true },
+        { targets: [0], render: function ( data, type, row) {
+            if(row.indexEditor == 0){
+              return '<button class="btn btn-outline btn-info waves-effect disabled">Modifica</button>'; }
+              else return '<a href='+data+' class="btn btn-outline btn-danger waves-effect" target="_blank">Modifica</a>';}
+              },
+        { targets: [1], render: function ( data, type, row) {
+            if(data == ""){
+              return '<button class="btn btn-outline btn-warning waves-effect">Vuoto</button>'; }
+              else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
+              },
+        { targets: [7], render: function ( data, type, row) {
+            if(data != ""){
+              return data.toFixed(2) }
+              else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
+              },
+        
+//        { targets: [6], render: function ( data, type, row) {
+//            if(data == 0){
+//              return '<button class="btn btn-outline btn-warning waves-effect">NoEdit</button>'; }
+//              else return '<a href='+ row.Modulo +' class="btn btn-outline btn-success waves-effect" target="_blank">Modifica</a>';}
+//              },
+          ],
+          
+          data: dataObject.table,
+          responsive: true,
+          scrollCollapse: true,
+          scrollY: 400,
+          paging: true,
+          paginationType: 'full',
+          order: [[ 3, 'asc' ],[ 2, 'asc' ]],
+          displayLength: 25,
+          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+          autoWidth: true,
+          fixedColumns: { leftColumns: 2 }, 
+          
+          
+          })
+          
+         // fine definizione variabile myTb
+            
+//------------------------------
+         // Gestione Pulsante Child Row
+  
+          $('.dataTable').on('click', 'td.details-control', function () { console.log('ok');           
+          
+         //  console.log(this)
+            
+              var tr = $(this).closest('tr');
+              var th = $(this).closest('table').find('th').eq($(this).index());
+              var row = myTb.row( tr );
+ 
+              if ( row.child.isShown() ) {
+              console.log('row child is alredy shown')
+         // This row is already open - close it
+              row.child.hide();
+              tr.removeClass('shown');
+              }
+              else {
+         // Open this row
+             console.log(JSON.stringify(th.text()))
+              console.log('row child ' + 'of row ' + row + ' is not already shown')
+             if (th.text() == "Personale"){
+                  row.child(list(row.data())).show();
+                  tr.addClass('shown');                 
+                };
+               };
+                
+         // Fine Gestione Pulsante Child Row
+//------------------------------
+          });
+        });
+      };
+                
+</script>
