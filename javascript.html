@@ -11,6 +11,10 @@
            
       window.onReadData = function(dataObject){
       
+      // parse necessario se l'oggetto viene restituito come JSON
+      dataObject = JSON.parse(dataObject)
+      
+      
       // estrae le proprietà dell'oggetto
        var keys = [];
            for(var key in dataObject.table[0]){
@@ -19,10 +23,13 @@
        
        console.log(keys)
        
+       console.log ( dataObject.table[0])
+       
+       
+       
       // dataObject.table[0]['Planimetrie'] = [1, 2];  
       dataObject.table[0]['Planimetrie'] = [{titolo: 'pippo', link: 'http://www.google.com'}, {titolo: 'pippo', link: 'http://www.google.com'}, {titolo: 'pluto', link: 'http://www.aci.it'}, {titolo: 'paperino', link: 'http://www.google.com'}];  
       
-      //console.log(JSON.stringify(dataObject))
        
        
 
@@ -55,10 +62,10 @@
           { data: 'email proprietario', title: "Email", visible: false},
           { data: 'indexEditor', title: "Editor", visible: false },
           { data: 'Media giornaliera STA PRA', title: "Media giornaliera STA PRA"},
-          { data: "Totale personale assegnato", title: "Personale assegnato"},
+          { data: "Totale personale assegnato", title: "Personale assegnato", visible:false},
           { data: "Personale in produzione", title: "Personale in produzione", visible:false},
-          { data: null, title: "Personale", className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
-          //{ data: null, title: "Planimetria", className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
+          { data:  null, title: "Personale", className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
+          { data: "Foto ufficio da allegare ", title: "Immagini",  className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
                 
           ],
           
@@ -77,7 +84,7 @@
               },
         { targets: [7], render: function ( data, type, row) {
             if(data != ""){
-              return data.toFixed(2) }
+              return data } //.toFixed(2) }
               else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
               },
         
@@ -108,10 +115,10 @@
 //------------------------------
          // Gestione Pulsante Child Row
   
-          $('.dataTable').on('click', 'td.details-control', function () { console.log('ok');           
-          
-         //  console.log(this)
-            
+          $('.dataTable').on('click', 'td.details-control', function () { 
+              
+
+              var classDetails = this.className
               var tr = $(this).closest('tr');
               var th = $(this).closest('table').find('th').eq($(this).index());
               var row = myTb.row( tr );
@@ -124,18 +131,48 @@
               }
               else {
          // Open this row
-             console.log(JSON.stringify(th.text()))
+              console.log(classDetails)
               console.log('row child ' + 'of row ' + row + ' is not already shown')
-             if (th.text() == "Personale"){
+              
+
                   row.child(list(row.data())).show();
                   tr.addClass('shown');                 
-                };
+
                };
+      $('.dataTable').on('click', 'td.image-control', function () { 
+              
+
+              var classDetails = this.className
+              var tr = $(this).closest('tr');
+              var th = $(this).closest('table').find('th').eq($(this).index());
+              var row = myTb.row( tr );
+ 
+              if ( row.child.isShown() ) {
+              console.log('row child is alredy shown')
+         // This row is already open - close it
+              row.child.hide();
+              tr.removeClass('shown');
+              }
+              else {
+         // Open this row
+              console.log(classDetails)
+              console.log('row child ' + 'of row ' + row + ' is not already shown')
+              
+                  row.child(gallery(row.data())).show();
+                  tr.addClass('shown');                 
+                };
                 
+         // Fine Gestione Pulsante Child Row
+//------------------------------
+          });
+
          // Fine Gestione Pulsante Child Row
 //------------------------------
           });
         });
       };
-                
+      
+      
+ 
+    
 </script>

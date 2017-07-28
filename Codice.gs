@@ -17,7 +17,7 @@ function include(filename) {
 
 // *****************  LEGGE I DATI DALLO SHEET E RESTITUISCE UN OBJECT  *************
 
-function readData(){
+function readDataOLD(){
 
 var rows = sheet.getLastRow()-2
 // Logger.log(rows);
