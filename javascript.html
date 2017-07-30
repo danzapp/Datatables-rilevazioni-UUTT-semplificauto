@@ -7,14 +7,13 @@
         google.script.run
         .withSuccessHandler(onReadData)
         .readData()
-      }
-           
-      window.onReadData = function(dataObject){
+   }
+      
+      function onReadData(dataObject){
       
       // parse necessario se l'oggetto viene restituito come JSON
       dataObject = JSON.parse(dataObject)
-      
-      
+
       // estrae le proprietà dell'oggetto
        var keys = [];
            for(var key in dataObject.table[0]){
@@ -24,14 +23,6 @@
        console.log(keys)
        
        console.log ( dataObject.table[0])
-       
-       
-       
-      // dataObject.table[0]['Planimetrie'] = [1, 2];  
-      dataObject.table[0]['Planimetrie'] = [{titolo: 'pippo', link: 'http://www.google.com'}, {titolo: 'pippo', link: 'http://www.google.com'}, {titolo: 'pluto', link: 'http://www.aci.it'}, {titolo: 'paperino', link: 'http://www.google.com'}];  
-      
-       
-       
 
        
         $(document).ready(function (){
@@ -65,7 +56,7 @@
           { data: "Totale personale assegnato", title: "Personale assegnato", visible:false},
           { data: "Personale in produzione", title: "Personale in produzione", visible:false},
           { data:  null, title: "Personale", className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
-          { data: "Foto ufficio da allegare ", title: "Immagini",  className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
+          { data:  null, title: "Immagini",  className: 'details-control', orderable: false, searchable: false, defaultContent: '' },
                 
           ],
           
@@ -82,17 +73,17 @@
               return '<button class="btn btn-outline btn-warning waves-effect">Vuoto</button>'; }
               else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
               },
-        { targets: [7], render: function ( data, type, row) {
-            if(data != ""){
-              return data } //.toFixed(2) }
-              else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
-              },
-        
-//        { targets: [6], render: function ( data, type, row) {
-//            if(data == 0){
-//              return '<button class="btn btn-outline btn-warning waves-effect">NoEdit</button>'; }
-//              else return '<a href='+ row.Modulo +' class="btn btn-outline btn-success waves-effect" target="_blank">Modifica</a>';}
-//              },
+              
+          { targets: [5], render: function ( data, type, row) {
+              return moment(data).format('YYYY/MM/DD')
+              
+         }
+        },
+        { targets: [7], render: function ( data, type, row) {       
+             return data.toFixed(2)         
+             }
+        },
+      
           ],
           
           data: dataObject.table,
@@ -108,8 +99,9 @@
           fixedColumns: { leftColumns: 2 }, 
           
           
-          })
+         })
           
+      
          // fine definizione variabile myTb
             
 //------------------------------
@@ -122,7 +114,7 @@
               var tr = $(this).closest('tr');
               var th = $(this).closest('table').find('th').eq($(this).index());
               var row = myTb.row( tr );
- 
+              var column = th.text()
               if ( row.child.isShown() ) {
               console.log('row child is alredy shown')
          // This row is already open - close it
@@ -133,46 +125,12 @@
          // Open this row
               console.log(classDetails)
               console.log('row child ' + 'of row ' + row + ' is not already shown')
-              
-
-                  row.child(list(row.data())).show();
+                  row.child(list(row.data(),column)).show();
                   tr.addClass('shown');                 
 
                };
-      $('.dataTable').on('click', 'td.image-control', function () { 
-              
-
-              var classDetails = this.className
-              var tr = $(this).closest('tr');
-              var th = $(this).closest('table').find('th').eq($(this).index());
-              var row = myTb.row( tr );
- 
-              if ( row.child.isShown() ) {
-              console.log('row child is alredy shown')
-         // This row is already open - close it
-              row.child.hide();
-              tr.removeClass('shown');
-              }
-              else {
-         // Open this row
-              console.log(classDetails)
-              console.log('row child ' + 'of row ' + row + ' is not already shown')
-              
-                  row.child(gallery(row.data())).show();
-                  tr.addClass('shown');                 
-                };
-                
-         // Fine Gestione Pulsante Child Row
-//------------------------------
           });
+       })
+     }
 
-         // Fine Gestione Pulsante Child Row
-//------------------------------
-          });
-        });
-      };
-      
-      
- 
-    
 </script>
