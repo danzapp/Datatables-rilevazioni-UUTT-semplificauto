@@ -65,12 +65,12 @@
         { targets: '_all', visible: true },
         { targets: [0], render: function ( data, type, row) {
             if(row.indexEditor == 0){
-              return '<button class="btn btn-outline btn-info waves-effect disabled">Modifica</button>'; }
+              return '<button class="btn btn-outline btn-info waves-effect" disabled>Modifica</button>'; }
               else return '<a href='+data+' class="btn btn-outline btn-danger waves-effect" target="_blank">Modifica</a>';}
               },
         { targets: [1], render: function ( data, type, row) {
             if(data == ""){
-              return '<button class="btn btn-outline btn-warning waves-effect">Vuoto</button>'; }
+              return '<button class="btn btn-outline btn-warning waves-effect" disabled>Dettagli</button>'; }
               else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
               },     
           { targets: [4], render: function ( data, type, row) {
