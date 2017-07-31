@@ -10,7 +10,7 @@
    }
       
       function onReadData(dataObject){
-      
+      moment.locale('it')
       // parse necessario se l'oggetto viene restituito come JSON
       dataObject = JSON.parse(dataObject)
 
@@ -72,14 +72,13 @@
             if(data == ""){
               return '<button class="btn btn-outline btn-warning waves-effect">Vuoto</button>'; }
               else return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Dettagli</a>';}
-              },
-              
-          { targets: [5], render: function ( data, type, row) {
-              return moment(data).format('YYYY/MM/DD')
-              
-         }
-        },
-        { targets: [7], render: function ( data, type, row) {       
+              },     
+          { targets: [4], render: function ( data, type, row) {
+              return moment(data).format('YYYY/MM/DD')     
+          }
+         },
+         
+         { targets: [7], render: function ( data, type, row) {       
              return data.toFixed(2)         
              }
         },
