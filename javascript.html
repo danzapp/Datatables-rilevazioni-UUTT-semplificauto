@@ -36,14 +36,32 @@
         // ******* definisce la variabile "myTb" ***********************
 
         var myTb = $('#myTb').DataTable({
-
-        "oLanguage": {"sSearch": "Filtra : "}, 
+        
+        oLanguage : {         
+          sEmptyTable:     "Nessun dato presente nella tabella",
+          sInfo:           "Vista da _START_ a _END_ di _TOTAL_ elementi",
+          sInfoEmpty:      "Vista da 0 a 0 di 0 elementi",
+          sInfoFiltered:   "(filtrati da _MAX_ elementi totali)",
+          sInfoPostFix:    "",
+          sInfoThousands:  ".",
+          sLengthMenu:     "Visualizza _MENU_ elementi",
+          sLoadingRecords: "Caricamento...",
+          sProcessing:     "Elaborazione...",
+          sSearch:         "Cerca:",
+          sZeroRecords:    "La ricerca non ha portato alcun risultato.",
+              oPaginate: {
+                  sFirst:      "Inizio",
+                  sPrevious:   "Precedente",
+                  sNext:       "Successivo",
+                  sLast:       "Fine"
+              },
+            },
        
         dom: 'Bfrltip',
         
         buttons: [
         
-               { text: 'Inserisci', action: function (e, dt, node, conf) { window.open('https://docs.google.com/a/aci.it/forms/d/1FAIpQLSfriiEbU_mRbucmkeBHw1juev-MepzVZpK1Gm-DLDTetXk37w/viewform', '_blank' );} },
+               { text: 'Inserisci', action: function (e, dt, node, conf) { window.open('https://docs.google.com/a/aci.it/forms/d/1CDagx-dPnZvP9S1YkKSaTtmGd4by_a8C0BL0um9nMhk/viewform', '_blank' );} },
                 'copyHtml5',                                                            
                 'excelHtml5',
                { extend: 'csvHtml5', text: 'XLS', orientation: 'landscape', alignment: 'center', exportOptions: { columns: [ 0, 1, 2, 3, 4] } },
@@ -67,6 +85,8 @@
 /* 11 */           { data:  null, title: "Planimetrie", visible:true},
 /* 12 */           { data:  null, title: "Personale", className: 'details-control', orderable: false, searchable: false, defaultContent: '' }, 
 /* 13 */           { data: "Regione", title: "Regione", visible:false},
+/* 14 */       { data: "Regola code", title: "Regolacode", visible:true},
+
           ],
           
         columnDefs: [
@@ -134,12 +154,13 @@
           data: dataObject.table,
           responsive: true,
           scrollCollapse: true,
-          scrollY: 400,
-          paging: true,
+          scrollY: "100vh",
+          paging: false,
           paginationType: 'full',
           order: [[13,  'asc'],[ 4, 'desc' ],[ 2, 'asc' ]],
           displayLength: 50,
           lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+          pageLength: 50,
           autoWidth: true,
           fixedColumns: { leftColumns: 2 }, 
 //          rowGroup: {
