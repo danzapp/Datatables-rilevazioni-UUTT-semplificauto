@@ -19,7 +19,7 @@ function include(filename) {
 
 function readData(){
 
-var dataRilevazioni = sheet.getDataRange().getValues()
+var dataRilevazioni = sheet.getDataRange().getValues() // [[],[],....]
 
 // rimuove riga 2 e 3
 dataRilevazioni.splice(1,2)
@@ -29,21 +29,25 @@ var currentUser = Session.getActiveUser().getEmail()
 // Logger.log(currentUser)
 
 // modifica il formato della data di rilevazione
-var dataObjectsArray = ObjApp.rangeToObjectsNoCamel(dataRilevazioni) //Object con un Array di Objects
+
+var dataObjectsArray = ObjApp.rangeToObjectsNoCamel(dataRilevazioni) //Object con un Array di Objects [{......}, {.....},....]
+
 
 var fotoObjectsArray = JSON.parse(loadFoto())
 
 var planimetrieObjectsArray = JSON.parse(loadPlanimetrie())
 
-//Logger.log('Foto spazi: ' + fotoSpaziObjectsArray.length)
-//Logger.log('Planimetrie: ' + planimetrieObjectsArray.length)
+var reportWifiObjectsArray = JSON.parse(loadWifi())
 
-
+Logger.log('Foto spazi: ' + JSON.stringify(fotoObjectsArray))
+Logger.log('Planimetrie: ' + planimetrieObjectsArray.length)
+Logger.log('Planimetrie Wi-Fi: ' + reportWifiObjectsArray.length)
+Logger.log("reportWifi : " + JSON.stringify(reportWifiObjectsArray))
 
 //Logger.log(dataObjectsArray)
 
 for (var i in dataObjectsArray){
-  Logger.log(i + ' - ' + dataObjectsArray[i]['Regione'])
+//  Logger.log(i + ' - ' + dataObjectsArray[i]['Regione'])
 }
 
 
@@ -61,11 +65,11 @@ dataObjectsArray.forEach(function(obj){
     obj.Ruolo = "Viewer"; 
   }
   
-  Logger.log(obj['Ufficio Territoriale'])
+//  Logger.log(obj['Ufficio Territoriale'])
   
 })
 
-Logger.log(JSON.stringify(dataObjectsArray))
+// Logger.log(JSON.stringify(dataObjectsArray))
 
 // ---------------------------------------------
   
@@ -73,7 +77,8 @@ var mainObject = {  // quando completa l'array di Object costruisce l'oggetto Co
       user: currentUser,
       table: dataObjectsArray,
       foto: fotoObjectsArray,
-      planimetrie: planimetrieObjectsArray
+      planimetrie: planimetrieObjectsArray,
+      reportWifi: reportWifiObjectsArray
     };
 
  // Logger.log(mainObject);
@@ -84,7 +89,7 @@ var mainObject = {  // quando completa l'array di Object costruisce l'oggetto Co
 
     
 function loadFoto(UT){
-   
+ 
 Logger.log('UT:' + UT)
     var sheetFoto = SpreadsheetApp.openByUrl('https://docs.google.com/a/aci.it/spreadsheets/d/1tuWo0RFwlHGsmSSimH9QahtzWdplkgghnTHdNwjjwGc/edit?usp=drive_web').getSheetByName('Foto spazi')
     var foto =  sheetFoto.getDataRange().getValues()
@@ -104,6 +109,7 @@ Logger.log('UT:' + UT)
     return JSON.stringify(fotoObjArray)
 
 }
+
 
 
 function loadPlanimetrie(UT){
@@ -127,3 +133,22 @@ function loadPlanimetrie(UT){
     
 }
 
+function loadWifi(UT){
+   
+    var sheetReportWifi = SpreadsheetApp.openByUrl('https://docs.google.com/a/aci.it/spreadsheets/d/1tuWo0RFwlHGsmSSimH9QahtzWdplkgghnTHdNwjjwGc/edit?usp=drive_web').getSheetByName('Planimetrie Wi-Fi')
+    var reportWifi =  sheetReportWifi.getDataRange().getValues()
+    
+    var reportWifiObjArray = ObjApp.rangeToObjectsNoCamel(reportWifi)
+   
+    // filtra per UT se non nullo
+    if (UT != null){
+        reportWifiObjArray = reportWifiObjArray.filter(function(el){ 
+            return el.UT == UT
+        })
+    }
+    
+   
+    
+    return JSON.stringify(reportWifiObjArray)
+    
+}

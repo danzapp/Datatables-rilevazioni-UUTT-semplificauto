@@ -25,7 +25,7 @@
            for(var key in dataObject.table[0]){
               keys.push(key);
            }
-       
+       console.log('keys')
        console.log(keys)
        
 
@@ -61,11 +61,16 @@
         buttons: [
         
                { text: 'Inserisci', action: function (e, dt, node, conf) { window.open('https://docs.google.com/a/aci.it/forms/d/1CDagx-dPnZvP9S1YkKSaTtmGd4by_a8C0BL0um9nMhk/viewform', '_blank' );} },
-               { extend: 'copyHtml5', text: 'Copia' },                                                           
-               { extend: 'csvHtml5', text: 'XLS', orientation: 'landscape', alignment: 'center', exportOptions: { columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] } },
-               { extend: 'pdfHtml5', text: 'PDF', pageSize: 'LEGAL', orientation: 'landscape', alignment: 'center', exportOptions: { columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ] }, 
-                   styles: { layout: 'lightHorizontalLines', tableHeader:{ fillColor:"#F0F8FF" }, }, },
-                ],
+               {
+                extend: 'collection',
+                text: 'Esporta',
+                buttons: [
+                           { text: 'Copia', extend: 'copyHtml5'},
+                           { extend: 'pdfHtml5', text: 'PDF', orientation: 'landscape', alignment: 'center', exportOptions: {   columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ] }, 
+                                     styles: { layout: 'lightHorizontalLines', tableHeader:{ fillColor:"#F0F8FF" }, }, },
+                          ]
+                      },                 
+                ],                
               
         columns: [
         
@@ -79,13 +84,12 @@
 /* 07 */           { data: 'Media giornaliera STA PRA', title: "Media giornaliera STA PRA"},
 /* 08 */           { data: "Totale personale assegnato", title: "Personale assegnato", visible:false},
 /* 09 */           { data: "Personale in produzione", title: "Personale in produzione", visible:false},
-/* 10 */           { data: "Schema Sportelli", title: "Sportelli", visible:true},
-/* 11*/           { data:  null, title: "Foto uffici"},
-/* 12 */           { data:  null, title: "Planimetrie", visible:true},
-/* 13 */           { data:  null, title: "Report WI-FI", visible:true},
-/* 14 */           { data: "Regione", title: "Regione", visible:false},
-/* 15 */           { data: "Regola code", title: "Regolacode", visible:false},
-/* 16 */           { data:  null, title: "Dettagli", className: 'details-control', orderable: false, searchable: false, defaultContent: '' }, 
+/* 10 */           { data:  null, title: "Foto uffici"},
+/* 11 */           { data:  null, title: "Planimetrie", visible:true},
+/* 12 */           { data:  null, title: "Report WI-FI", visible:true},
+/* 13 */           { data: "Regione", title: "Regione", visible:false},
+/* 14 */           { data: "Regola code", title: "Regolacode", visible:false},
+/* 15 */           { data:  null, title: "Dettagli", className: 'details-control', orderable: false, searchable: false, defaultContent: '' }, 
 
           ],
           
@@ -111,12 +115,8 @@
              return data.toFixed(2)         
              }
           },
-         
-          { targets: [10], render: function ( data, type, row) {
-              return '<a href='+data+' class="btn btn-outline btn-info waves-effect" target="_blank">Visualizza</a>';}
-              },
           
-         { targets: [11], render: function ( data, type, row) { 
+         { targets: [10], render: function ( data, type, row) { 
             
               var UT = row['Ufficio Territoriale'].toUpperCase()
               var fotoUT = foto.filter(function (el){
@@ -134,8 +134,8 @@
           },
 
 
-// ------------------ foto planimetrie           
-          { targets: [12], render: function ( data, type, row) { 
+// ------------------ foto planimetrie 
+          { targets: [11], render: function ( data, type, row) { 
             
               var UT = row['Ufficio Territoriale'].toUpperCase()
               var planimetrieUT = planimetrie.filter(function (el){
@@ -151,10 +151,37 @@
                 return '<button id="btnGalleryPlan" class="btn btn-info galleryPlanimetrie" data-ufficio="'+UT+'" data-planimetrie=\''+ JSONplanimetrieUT + '\' data-toggle="modal" data-target=".bs-example-modal-lg">Planimetrie <span class="badge">' + numPlanimetrie + '</span></button>';}
                 else return '';}
           }, 
+
+
+//          { targets: [11], render: function ( data, type, row) { 
+//            
+//              var UT = row['Ufficio Territoriale'].toUpperCase()
+//              
+//              var planimetrieUT = planimetrie.filter(function (el){
+//                   return el['UT'] == UT 
+//              })
+//              
+//              var numPlanimetrie = planimetrieUT.length;
+//              if (numPlanimetrie >0){
+//              //"[{'a':1, 'b':2},{'a':2, 'b':3}]"
+//
+//              var JSONplanimetrieUT = JSON.stringify(planimetrieUT)
+//              
+//              var link = planimetrieUT[0].Link
+//              console.log(link)
+//              JSONplanimetrieUT = JSONplanimetrieUT.replace(/"/g, '\'');
+//              console.log(JSONplanimetrieUT)
+//              
+//              // per passare l'oggetto come data-attributes si deve convertire in stringa e poi usare l'escape '\
+//              // data-planimetrie=\"'+JSONplanimetrieUT + '\'"
+//                return '<button id="btnGalleryPlan" class="btn btn-info galleryPlanimetrie" data-ufficio="'+UT+'" data-link="'+ link  + ' data-toggle="modal" data-target=".bs-example-modal-lg" data-planimetrie="' + JSONplanimetrieUT + '">Planimetrie <span class="badge">' + numPlanimetrie + '</span></button>';}
+//                //return "<button id='btnGalleryPlan' class='btn btn-info galleryPlanimetrie' data-ufficio='"+UT+"' data-planimetrie=\""+ JSONplanimetrieUT + "\" data-toggle='modal' data-target='.bs-example-modal-lg'>Planimetrie <span class='badge'>" + numPlanimetrie + "</span></button>";}
+//                else return '';}
+//          }, 
 // ------------------ fine foto planimetrie     
 
 // ------------------ Report WI-FI           
-          { targets: [13], render: function ( data, type, row) { 
+          { targets: [12], render: function ( data, type, row) { 
             
               var UT = row['Ufficio Territoriale'].toUpperCase()
               var reportUT = report.filter(function (el){
@@ -180,20 +207,16 @@
           responsive: true,
           scrollCollapse: true,
           scrollY: "100vh",
-          scrollX: "100%",
+//          scrollX: "100%",
 //          scrollXInner: "110%",
           paging: true,
           paginationType: 'full',
           order: [[13,  'asc'],[ 4, 'desc' ],[ 2, 'asc' ]],
 //          displayLength: 5,
           lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-//          pageLength: 10,
+          pageLength: 25,
           autoWidth: true,
-//          fixedColumns: { leftColumns: 3 },
-//          rowGroup: {
-//                dataSrc: 'Regione'
-//                },
-//            
+            
         // -------------  Datatables Row grouping
 
           drawCallback: function ( settings ) {
@@ -257,8 +280,8 @@
              if (i==0){ 
                  itemsCarousel = itemsCarousel + 
                  '<div class="item active">'+
-                   '<img src="https://drive.google.com/uc?id='+ immagini[i]['ID file']+
-                     '" alt="'+immagini[i]['Nome file']+
+                   '<img src="https://drive.google.com/uc?id='+ immagini[i]["ID file"]+
+                     '" alt="'+immagini[i]["Nome file"]+
                        '"><div class="carousel-caption">'+ immagini[i]["Spazio"]+'</h4></div>'+
                   '</div>'
              }
@@ -287,14 +310,11 @@
 
 
 
-
-
 // ------------ carousel Planimetrie UT  ----------------
  $('.dataTable').on('click','#btnGalleryPlan', function(e){
 
-
    var planimetrie = $(this).data('planimetrie')
-   //var UT = ($(this).closest('tr').find('td').eq(3).text()).toUpperCase();
+   var UT = ($(this).closest('tr').find('td').eq(3).text()).toUpperCase();
    var UT = $(this).data('ufficio')
    console.log('this UT ' + UT)
    var dataRilevazione = ($(this).closest('tr').find('td').eq(4).text())
@@ -312,6 +332,7 @@
                  }
          }
       $(".footer-line #UT").html( UT + ' - ' + dataRilevazione)
+//    $(".footer-line #Spazio").html(planimetrie[i]['Spazio']
       $(".carousel-indicators").html(indicatorsCarousel);
       
          for (var i=0; i<planimetrie.length; i++) {
@@ -319,19 +340,31 @@
              if (i==0){ 
                  itemsCarousel = itemsCarousel + 
                  '<div class="item active">'+
+                 
                    '<iframe src="https://drive.google.com/viewer?srcid='+planimetrie[i]['ID file']+
                    '&pid=explorer&efh=false&a=v&chrome=false&embedded=true" width="580px" height="480px"'+
-                     '" alt="'+planimetrie[i]['Nome file']+
-                       '"></iframe><div class="carousel-caption">'+ planimetrie[i]["Spazio"]+'</h4></div>'+
+                   '" alt="'+planimetrie[i]['Nome file']+
+                   '"></iframe><div class="carousel-caption">'+ 
+//                   planimetrie[i]["Spazio"]+
+                   '</div>'+
+                       
                   '</div>'
              }
              else
              {
                   itemsCarousel = itemsCarousel + 
                  '<div class="item">'+
-                   '<img src="https://drive.google.com/uc?id='+ planimetrie[i]['ID file']+
-                     '" alt="'+planimetrie[i]['Nome file']+
-                       '"><div class="carousel-caption">'+ planimetrie[i]["Spazio"]+'</div>'+
+                 
+                   '<iframe src="https://drive.google.com/viewer?srcid='+planimetrie[i]['ID file']+
+                   '&pid=explorer&efh=false&a=v&chrome=false&embedded=true" width="580px" height="480px"'+
+                   '" alt="'+planimetrie[i]['Nome file']+
+                   '"></iframe><div class="carousel-caption">'+ 
+//                   planimetrie[i]["Spazio"]+
+                   '</div>'+                 
+                 
+//                   '<img src="https://drive.google.com/uc?id='+ planimetrie[i]['ID file']+
+//                     '" alt="'+planimetrie[i]['Nome file']+
+//                       '"><div class="carousel-caption">'+ planimetrie[i]["Spazio"]+'</div>'+
                   '</div>'
              }
          }
@@ -345,8 +378,8 @@
          $('.carousel').carousel({
             interval: 2000
          })
-// ------------ Fine carousel planimetrie UT  ----------------
 
+// ------------ Fine carousel planimetrie UT  ----------------
 
 
 
@@ -359,13 +392,14 @@
 
    var reportWifi = $(this).data('report')
    //var UT = ($(this).closest('tr').find('td').eq(3).text()).toUpperCase();
+   
    var UT = $(this).data('ufficio')
    console.log('this UT ' + UT)
+   
    var dataRilevazione = ($(this).closest('tr').find('td').eq(4).text())
 
          var itemsCarousel = ''
          var indicatorsCarousel = ''
-
         
          for (var i=0; i<reportWifi.length; i++) {
                if (i==0){
@@ -384,19 +418,26 @@
                  itemsCarousel = itemsCarousel + 
                  '<div class="item active">'+
                  
-                   '<iframe src="https://drive.google.com/viewer?srcid='+reportWifi[i]['ID file']+
-                   '&pid=explorer&efh=false&a=v&chrome=false&embedded=true" width="580px" height="480px"'+
+                     '<iframe src="https://drive.google.com/viewer?srcid='+reportWifi[i]['ID file']+
+                     '&pid=explorer&efh=false&a=v&chrome=false&embedded=true" width="580px" height="480px"'+
                      '" alt="'+reportWifi[i]['Nome file']+
-                       '"></iframe><div class="carousel-caption">'+ reportWifi[i]["Spazio"]+'</h4></div>'+
+                     '"></iframe><div class="carousel-caption">'+ reportWifi[i]["Spazio"]+'</h4></div>'+
+                   
                   '</div>'
              }
              else
              {
                   itemsCarousel = itemsCarousel + 
                  '<div class="item">'+
-                   '<img src="https://drive.google.com/uc?id='+ reportWifi[i]['ID file']+
+                 
+                     '<iframe src="https://drive.google.com/viewer?srcid='+reportWifi[i]['ID file']+
+                     '&pid=explorer&efh=false&a=v&chrome=false&embedded=true" width="580px" height="480px"'+
                      '" alt="'+reportWifi[i]['Nome file']+
-                       '"><div class="carousel-caption">'+ reportWifi[i]["Spazio"]+'</div>'+
+                     '"></iframe><div class="carousel-caption">'+ reportWifi[i]["Spazio"]+'</h4></div>'+
+                 
+//                   '<img src="https://drive.google.com/uc?id='+ reportWifi[i]['ID file']+
+//                     '" alt="'+reportWifi[i]['Nome file']+
+//                       '"><div class="carousel-caption">'+ reportWifi[i]["Spazio"]+'</div>'+
                   '</div>'
              }
          }

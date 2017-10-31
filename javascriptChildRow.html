@@ -1,40 +1,32 @@
 <script>
 // ***********************  funzione di formattazione delle Child Row *****************************
 /* Formatting function for row details - modify as you need */
-
-function list(d,column) {
+function list ( d, column ) {
     // `d` is the original data object for the row
-    //var column = 'Immagini'
-     var divChildRow = ''
-    console.log('viewDetail ' + column)
-    
-    switch (column){
-    case "Personale":
-      // divChildRow = '<table class="table table-responsive table-striped">'+ 
-      divChildRow = '<table class="table table-responsive table-striped table-bordered display bodycontainer scrollable" cellspacing="0" width="100%" height="100%" align="center">'+
-                      '<tr style="width: 90px;">'+
-                        '<td style="width: 180px;">Personale assegnato:</td>'+
-                        '<td  class="pull-right">'+d["Totale personale assegnato"]+'</td>'+
+           var divChildRow = '<table class="table table-bordered table-striped">'+
+                      '<tr>'+
+                        '<td>Personale assegnato: </td>'+'<td><b>'+d["Totale personale assegnato"]+'</b></td>'+'<td>Avviamento Wi-Fi: </td>'+ '<td><button class="btn btn-outline btn-info waves-effect disabled"><em>da definire</em></button></td>'+
                       '</tr>'+
-                      '<tr style="width: 90px;">'+
-                        '<td style="width: 180px;">Personale in produzione:</td>'+
-                        '<td  class="pull-right">'+d["Personale in produzione"]+'</td>'+
-                      '</tr>'
+                      '<tr>'+
+                        '<td>Personale in produzione: </td>'+'<td><b>'+d["Personale in produzione"]+'</b></td>'+'<td colspan="2" align="center">Elenco delle postazioni UU.TT.</td>'+
+                      '</tr>'+
+                      '<tr>'+
+                        '<td>Regola code: </td>'+ '<td><b>'+d["Regola code"]+'</b></td>'+'<td colspan="2"><a href="https://sites.google.com/a/aci.it/agora-ssi/hardware-uu-tt" align="center" class="btn btn-outline btn-danger waves-effect" target="_blank">Hardware UU.TT</a></td>'
+                      '</tr>'+
+                      
+                      '<tr>'+
+                        '<td>Regola code: </td>'+ '<td><b>'+d["Regola code"]+'</b></td>'+'<td colspan="2"><a href="https://sites.google.com/a/aci.it/agora-ssi/hardware-uu-tt" align="center" class="btn btn-outline btn-danger waves-effect" target="_blank">Hardware UU.TT</a></td>'
+                      '</tr>'+
+                      
+                      '<tr>'+
+                        '<td>Regola code DSI: </td>'+ '<td colspan="3"><https://docs.google.com/spreadsheets/d/1lXHRNTPDxIuZQ-18VGkL66bLyauliCaldBEy3VxPFwg/edit#gid=0" align="center" class="btn btn-outline btn-danger waves-effect" target="_blank">EliminaCode</a></td>'
+                      '</tr>'+
+
+
+                      
                     '</table>'
-   
+
          return divChildRow;
-         break;
-     case "Immagini":
-     var immagini = d["Foto ufficio da allegare "].split(',')     
-     var divChildRow = ''
-     for (var i=0; i<immagini.length; i++){
-                    divChildRow = divChildRow + '<div class="gallery"> <a target="_blank" href="'+ immagini[i] +'"> <img src="'+ immagini[i] +'" alt="immagine ' + (i+1)+ '" width="300" height="200" ></a>'+'</div>'
-                 }
-           return divChildRow;
-           break;
-     default:
-     break;
     }
-  }
        
 </script>

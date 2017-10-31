@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script src="pdfjs/pdf.js"></script>
+    <script src="pdf-viewer.min.js"></script>
+    
+    <link href="pdf-viewer.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+    <div id="pdf-container"></div>
+
+</body>
+
+</html>
+<script>
+$(document).ready(function() {
+    var table = $('#example').DataTable( {
+        "ajax": "data/arrays.txt",
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": "<button>Test</button>"
+        } ]
+    } );
+ 
+    $('#example tbody').on( 'click', 'button', function () {
+        var data = table.row( $(this).parents('tr') ).data();
+        alert( data[0] +"'s salary is: "+ data[ 5 ] );
+    } );
+} );
+</script>
